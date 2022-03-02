@@ -61,7 +61,7 @@ public class CrapsPlay {
         while (!finished) {
             System.out.println("Roll dices? Type 'Yes' or 'No': ");
             String goOn = scan.nextLine();
-            if (goOn.equalsIgnoreCase("Nej")) {
+            if (goOn.equalsIgnoreCase("No")) {
                 finished = true;
             } else {
                 takeTurn();
