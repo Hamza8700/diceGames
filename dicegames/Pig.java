@@ -10,8 +10,6 @@ public class Pig {
     private int PlyOnePoints;
     private int PlyTwoPoints;
     private int winCondition = 100;
-    private int turns1, turns2;
-    private int rolls1, rolls2;
 
     public Pig() {
         die = new Die();
@@ -24,9 +22,6 @@ public class Pig {
 
     private void gameOver() {
         System.out.println("PIG/100 Game Over");
-
-        System.out.println("Player 1 | Total Turns: "+turns1+" | Total Rolls: "+rolls1);
-        System.out.println("Player 2 | Total Turns: "+turns2+" | Total Rolls: "+rolls2);
         scan.close();
     }
 
@@ -36,64 +31,52 @@ public class Pig {
             int dieFaceValue = 0;
             if (plyNumber == 1) {
                 System.out.println("Player One's Turn");
-                turns1 = turns1 + 1;
-                System.out.println("Roll: 'r' or Stop: 's'");
-                String input = scan.nextLine();
-                while (input.equalsIgnoreCase("r") || dieFaceValue != 1) {
-                    die.roll();
-                    rolls1 = rolls1 + 1;
-                    dieFaceValue = die.getFaceValue();
-                    System.out.println("You rolled: " + dieFaceValue);
-                    if (dieFaceValue == 1) {
-                        System.out.println("You lose your turn, your current score is: " + PlyOnePoints);
-                        currentPoints = 0;
-                        plyNumber = 2;
-                        break;
-                    } else {
-                        currentPoints += dieFaceValue;
-                        System.out.println("Turn score: "+currentPoints);
-                        System.out.println("Roll: 'r' or Stop: 's'");
-                        input = scan.nextLine();
-                        if (input.equalsIgnoreCase("s")) {
-                            plyNumber = 2;
-                            break;
-                        }
-                    }
-                }
-                PlyOnePoints += currentPoints;
-                System.out.println("Player 1 Score: " + PlyOnePoints);
-                currentPoints = 0;
             } else if (plyNumber == 2) {
                 System.out.println("Player Two's Turn");
-                turns2 = turns2 + 1;
-                System.out.println("Roll: 'r' or Stop: 's'");
-                String input = scan.nextLine();
-                while (input.equalsIgnoreCase("r") || dieFaceValue != 1) {
-                    die.roll();
-                    rolls2 = rolls2 + 1;
-                    dieFaceValue = die.getFaceValue();
-                    System.out.println("You rolled: " + dieFaceValue);
-                    if (dieFaceValue == 1) {
+            }
+            System.out.println("Roll: 'r' or Stop: 's'");
+            String input = scan.nextLine();
+            while (input.equalsIgnoreCase("r") || dieFaceValue != 1) {
+                die.roll();
+                dieFaceValue = die.getFaceValue();
+                System.out.println("You rolled: " + dieFaceValue);
+                if (dieFaceValue == 1) {
+                    if (plyNumber == 1) {
+                        System.out.println("You lose your turn, your current score is: " + PlyOnePoints);
+                        plyNumber = 2;
+                    } else if (plyNumber == 2) {
                         System.out.println("You lose your turn, your current score is: " + PlyTwoPoints);
-                        currentPoints = 0;
                         plyNumber = 1;
-                        break;
-                    } else {
-                        currentPoints += dieFaceValue;
-                        System.out.println("Turn score: "+currentPoints);
-                        System.out.println("Roll: 'r' or Stop: 's'");
-                        input = scan.nextLine();
-                        if (input.equalsIgnoreCase("s")) {
+                    }
+                    currentPoints = 0;
+                    break;
+                } else {
+                    currentPoints += dieFaceValue;
+                    System.out.println("Turn score: "+currentPoints);
+                    System.out.println("Roll: 'r' or Stop: 's'");
+                    input = scan.nextLine();
+                    if (input.equalsIgnoreCase("s")) {
+                        if (plyNumber == 1) {
+                            plyNumber = 2;
+                        } else if (plyNumber == 2) {
                             plyNumber = 1;
-                            break;
                         }
+                        break;
                     }
                 }
-                PlyTwoPoints += currentPoints;
-                System.out.println("Player 2 Score: " + PlyTwoPoints);
-                currentPoints = 0;
             }
 
+            // Calculate Points:
+            if (plyNumber == 1) {
+                PlyOnePoints += currentPoints;
+                System.out.println("Player 1 Score: " + PlyOnePoints);
+            } else if (plyNumber == 2) {
+                PlyTwoPoints += currentPoints;
+                System.out.println("Player 2 Score: " + PlyTwoPoints);
+            }
+            currentPoints = 0;
+
+            // Check Win Conditions:
             if (PlyOnePoints >= winCondition) {
                 System.out.println("Player 1 Won the Game!");
                 finished = true;
